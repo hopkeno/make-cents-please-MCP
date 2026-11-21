@@ -2,6 +2,11 @@
 
 Each release is published to https://github.com/hopkeno/make-cents-please-MCP.
 
+## v0.2.0
+
+- **`YNAB_TOOLS=off`:** hides the `ynab_*` tools so make-cents-please can run alongside YNAB's own hosted MCP server without duplicate YNAB tools. The Charity Record tools stay available. Reconcile and finding YNAB donations keep working when a YNAB token is set, and the token is optional otherwise.
+- **CI:** GitHub Actions updated to Node 24 versions.
+
 ## v0.1.0
 
 First public release.

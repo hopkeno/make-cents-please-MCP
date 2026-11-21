@@ -1,6 +1,6 @@
 [project]
 name = "make-cents-please"
-version = "0.1.0"
+version = "0.2.0"
 description = "Local, read-only MCP server that exposes your budget (YNAB first) to an AI assistant."
 readme = "README.md"
 license = "MIT"

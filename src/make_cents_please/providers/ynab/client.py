@@ -151,6 +151,8 @@ class YnabClient:
         *,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
+        if config.token is None:
+            raise ValueError("YnabClient needs YNAB_ACCESS_TOKEN.")
         self._secret = config.token.reveal()
         self.default_plan_id = config.default_plan_id
         configuration = ynab.Configuration(access_token=self._secret)

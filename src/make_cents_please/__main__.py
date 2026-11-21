@@ -15,7 +15,7 @@ def main() -> None:
     except ConfigError as exc:
         print(f"make-cents-please: {exc}", file=sys.stderr)
         sys.exit(2)
-    configure_logging(config.log_level, [config.token.reveal()])
+    configure_logging(config.log_level, [config.token.reveal()] if config.token else [])
     build_server(config).run("stdio")
 
 

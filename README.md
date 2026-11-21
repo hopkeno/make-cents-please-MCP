@@ -43,7 +43,8 @@ A local [MCP](https://modelcontextprotocol.io) server that lets an AI assistant 
 
 | Variable | Required | Default | Meaning |
 |---|---|---|---|
-| `YNAB_ACCESS_TOKEN` | yes | | Your YNAB personal access token |
+| `YNAB_ACCESS_TOKEN` | yes, unless `YNAB_TOOLS=off` | | Your YNAB personal access token |
+| `YNAB_TOOLS` | no | `on` | Set to `off` to hide the `ynab_*` tools, for example when you use [YNAB's own MCP server](#using-with-ynabs-own-mcp-server) for YNAB. The Charity Record tools stay available. |
 | `YNAB_DEFAULT_PLAN_ID` | no | `last-used` | Plan (budget) used when a tool call has no `plan_id`. Find ids with the `ynab_list_plans` tool. |
 | `YNAB_CACHE_TTL_SECONDS` | no | `300` | How long a cached response counts as fresh |
 | `LOG_LEVEL` | no | `WARNING` | Log level for stderr output |
@@ -165,6 +166,19 @@ Transactions themselves have no name, so update and delete calls still show the 
 - **Split transactions:** their amount and categories cannot be changed through the API. Change those in the YNAB app, or delete and recreate the transaction.
 - **After any write,** the cache is cleared so the next read shows fresh data.
 - **Network errors during a write** may leave it unclear whether the change was applied. The error says so; check the data before trying again.
+
+## Using with YNAB's own MCP server
+
+YNAB offers its own hosted MCP server (see [YNAB's MCP Server](https://support.ynab.com/en_us/mcp-S1wvNaXAMe)). It covers the everyday YNAB reads and writes, uses OAuth instead of a token, and works in Claude on the web and mobile and in ChatGPT.
+
+If you use it for YNAB, set `YNAB_TOOLS=off` here. Two sets of near-identical YNAB tools in one client make the assistant choose between them inconsistently. With YNAB tools off:
+
+- **Hidden:** all `ynab_*` tools. `YNAB_ALLOW_WRITES` has no effect.
+- **Still available:** the Charity Record tools.
+- **With a `YNAB_ACCESS_TOKEN`:** `charityrecord_find_ynab_donations` and `charityrecord_reconcile` keep working, because they read YNAB directly.
+- **Without a token:** those two tools are left out, and the token isn't required.
+
+Things this server can do that YNAB's own server doesn't list (as of November 2026): delete transactions and scheduled transactions, bulk-edit transactions, import from linked accounts, assign money in months other than the current one, create or rename payees, and create accounts. Turn `YNAB_TOOLS` back on if you need them.
 
 ## Charity Record
 

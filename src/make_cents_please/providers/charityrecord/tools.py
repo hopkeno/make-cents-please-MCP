@@ -302,7 +302,10 @@ def register(server: MCPServer, folder: Folder, client: YnabClient | None) -> No
         found.sort(key=lambda x: x["date"])
         return found
 
-    @tool(LOCAL_READ)
+    # These two need YNAB data, so they exist only when a YNAB token is configured.
+    ynab_tool = tool(LOCAL_READ) if client is not None else (lambda fn: fn)
+
+    @ynab_tool
     def charityrecord_find_ynab_donations(
         since_date: Annotated[str, Field(description="YYYY-MM-DD, e.g. 2025-01-01.")],
         until_date: Annotated[str, Field(description="YYYY-MM-DD, e.g. 2025-12-31.")],
@@ -325,7 +328,7 @@ def register(server: MCPServer, folder: Folder, client: YnabClient | None) -> No
         total = sum((Decimal(str(x["amount"])) for x in found), Decimal("0"))
         return {"count": len(found), "total": money(total), "donations": found}
 
-    @tool(LOCAL_READ)
+    @ynab_tool
     def charityrecord_reconcile(
         since_date: Annotated[str, Field(description="YYYY-MM-DD.")],
         until_date: Annotated[str, Field(description="YYYY-MM-DD.")],
